@@ -55,6 +55,8 @@ composer require --dev stolt/version-aligner
 
 ## Available commands
 
+### Check command
+
 `check` compares the application's version with the latest Git tag and the latest CHANGELOG.md entry.
 
 ```bash
@@ -101,21 +103,23 @@ Evaluable outcomes of the `check` command are:
 | Required source missing  | Clear diagnostic and non-zero exit |
 | Git metadata unavailable | Clear diagnostic and non-zero exit |
 
+### Align command
+
 `align` updates the __application__ version when it differs from the release version.
 
 ```bash
 version-aligner align [--dry-run]
 ```
 
-### License
+## License
 
 This library and its CLI are licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
 
-### Changelog
+## Changelog
 
 All noteworthy changes are documented in the [CHANGELOG.md](CHANGELOG.md).
 
-### Contributing
+## Contributing
 
 If you're considering contributing to this project, have a look at this repository's [CONTRIBUTING.md](.github/CONTRIBUTING.md)
 for more advice.
