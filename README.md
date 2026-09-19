@@ -92,6 +92,15 @@ Example Composer script:
 }
 ```
 
+Evaluable outcomes of the `check` command are:
+
+| Scenario                 | Expected behavior                  |
+| ------------------------ | ---------------------------------- |
+| All versions match       | Exit `0`                           |
+| Version mismatch         | Non-zero exit                      |
+| Required source missing  | Clear diagnostic and non-zero exit |
+| Git metadata unavailable | Clear diagnostic and non-zero exit |
+
 `align` updates the __application__ version when it differs from the release version.
 
 ```bash
