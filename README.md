@@ -57,8 +57,6 @@ composer require --dev stolt/version-aligner
 
 `check` compares the application's version with the latest Git tag and the latest CHANGELOG.md entry.
 
-You can use it in pre-commit Git hooks, Composer scripts, or continuous integration workflows. 
-
 ```bash
 version-aligner check [--format=json]
 ```
@@ -81,6 +79,17 @@ Version alignment
 ✓ Application      1.0.0
 
 All versions are aligned.
+```
+
+You can use it in pre-commit Git hooks, Composer scripts, or continuous integration workflows.
+
+Example Composer script:
+```json
+"scripts": {
+   "test": "phpunit",
+   ... // omitted scripts
+   "version-check": "version-aligner check"
+}
 ```
 
 `align` updates the __application__ version when it differs from the release version.
