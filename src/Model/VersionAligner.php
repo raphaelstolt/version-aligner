@@ -65,10 +65,10 @@ class VersionAligner
                 $binPath = $this->workingDirectory . DIRECTORY_SEPARATOR . $binFile;
                 if (file_exists($binPath)) {
                     $content = (string) file_get_contents($binPath);
-                    $pattern = '/((?:new\s+[a-zA-Z0-9_\\\\]+\s*\(\s*[\'"][^\'"]+[\'"]\s*,\s*|->setVersion\s*\(\s*|const\s+[A-Z0-9_]+\s*=\s*|define\s*\(\s*[\'"][^\'"]+[\'"]\s*,\s*)[\'"])(v?\d+\.\d+\.\d+(?:-[a-zA-Z0-9\.]+)*)([\'"])/i';
+                    $pattern = '/([\'"])(v?\d+\.\d+\.\d+(?:-[a-zA-Z0-9\.]+)*)([\'"])/';
 
                     if (preg_match($pattern, $content)) {
-                        $newContent = preg_replace($pattern, '${1}' . $targetVersion . '${3}', $content);
+                        $newContent = preg_replace($pattern, '${1}' . $targetVersion . '${3}', $content, 1);
                         if ($newContent !== null && !$dryRun) {
                             file_put_contents($binPath, $newContent);
                         }
