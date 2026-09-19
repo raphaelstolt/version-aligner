@@ -1,0 +1,41 @@
+php-version = "8.3"
+
+[source]
+paths = ["src", "tests"]
+excludes = [
+  # Configuration fixtures, which are deliberately shaped the way the tools under
+  # migration shape them, and must not be reformatted or linted.
+  "tests/fixtures",
+]
+
+[formatter]
+print-width = 120
+
+[linter]
+integrations = ["phpunit"]
+
+[linter.rules]
+# `isset()` is used on purpose here: to detect a child node of a SimpleXMLElement,
+# which a null comparison cannot do, and to look up a key of a mapping table whose
+# values are never null. Where a null value has to be told apart from an absent key,
+# the code uses array_key_exists().
+no-isset = { enabled = false }
+
+# Named arguments are used where they carry meaning, e.g. when building the readonly
+# value objects. Requiring them for every literal argument of a function call reads
+# against the grain of the standard library.
+literal-named-argument = { enabled = false }
+
+# The metric rules below flag shapes which are intentional in this code base:
+#
+# - the mapping tables are declarative lookups, one match arm per source rule, which
+#   is inherently branch heavy and stays readable precisely because it is flat;
+# - the readers and the tables consist of many small private methods, which these
+#   rules penalise instead of reward;
+# - the migration value objects take one constructor parameter per property, as they
+#   are constructed with named arguments.
+cyclomatic-complexity = { enabled = false }
+excessive-parameter-list = { enabled = false }
+halstead = { enabled = false }
+kan-defect = { enabled = false }
+too-many-methods = { enabled = false }
