@@ -5,9 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to
 [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [Unreleased]
+
+## [v1.0.1] - 2026-09-19
+
+### Fixed
+- Simplified version matching.
 
 ## v1.0.0 - 2026-09-19
 
 ### Added
 - Initial implementation.
+
+[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.0...v1.0.1
