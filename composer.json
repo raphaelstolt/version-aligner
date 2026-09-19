@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": ">=8.2",
-        "symfony/console": "^8.1"
+        "symfony/console": "^7.4 || ^8.1"
     },
     "bin": [
        "bin/version-aligner"

@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.0.3] - 2026-09-19
+
+### Fixed
+- Added symfony/console `^7.4` support.
+
 ## [v1.0.2] - 2026-09-19
 
 ### Fixed
