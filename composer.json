@@ -39,5 +39,19 @@
         "carthage-software/mago": "^1.49",
         "phpunit/phpunit": "^13.3",
         "zenstruck/console-test": "^1.8"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs-lint": [
+            "mago format --check",
+            "mago lint"
+        ],
+        "cs-fix": "mago format",
+        "version-check": "bin/version-aligner check",
+        "pre-commit-check": [
+            "@cs-lint",
+            "@version-check",
+            "@test"
+        ]
     }
 }
