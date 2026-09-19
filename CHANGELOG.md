@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.0.2] - 2026-09-19
+
+### Fixed
+- Expanded version lookup locations.
+
 ## [v1.0.1] - 2026-09-19
 
 ### Fixed
@@ -17,5 +22,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Initial implementation.
 
-[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.0...v1.0.1

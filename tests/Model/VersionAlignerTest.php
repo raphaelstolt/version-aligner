@@ -107,4 +107,34 @@ class VersionAlignerTest extends TestCase
         $updatedContent = (string) file_get_contents($this->fixtureDir . '/bin/app');
         $this->assertStringContainsString("'1.0.0'", $updatedContent); // Remained unchanged
     }
+
+    public function testAlignUpdatesVersionInSrcConsoleApplicationPhp(): void
+    {
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode([]));
+        $srcDir = $this->fixtureDir . '/src/Console';
+        mkdir($srcDir, 0777, true);
+
+        $content = <<<EOF
+            <?php
+            namespace App\Console;
+            class Application extends \Symfony\Component\Console\Application
+            {
+                public function __construct()
+                {
+                    parent::__construct('My App', '4.2.0');
+                }
+            }
+            EOF;
+        file_put_contents($srcDir . '/Application.php', $content);
+
+        $checker = $this->createMock(VersionChecker::class);
+        $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0'));
+
+        $aligner = new VersionAligner($this->fixtureDir, $checker);
+        $aligner->align();
+
+        $updatedContent = (string) file_get_contents($srcDir . '/Application.php');
+        $this->assertStringContainsString("'4.3.0'", $updatedContent);
+        $this->assertStringNotContainsString("'4.2.0'", $updatedContent);
+    }
 }

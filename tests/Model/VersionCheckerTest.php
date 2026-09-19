@@ -117,4 +117,30 @@ class VersionCheckerTest extends TestCase
         $checker = new VersionChecker($this->fixtureDir);
         $this->assertSame('1.8.0', $checker->getApplicationVersion());
     }
+
+    public function testGetApplicationVersionFromSrcConsoleApplicationPhp(): void
+    {
+        // No bin defined, so it will fallback to checking common paths.
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode([]));
+
+        $srcDir = $this->fixtureDir . '/src/Console';
+        mkdir($srcDir, 0777, true);
+
+        $content = <<<EOF
+            <?php
+            namespace App\Console;
+
+            class Application extends \Symfony\Component\Console\Application
+            {
+                public function __construct()
+                {
+                    parent::__construct('My App', '4.2.0');
+                }
+            }
+            EOF;
+        file_put_contents($srcDir . '/Application.php', $content);
+
+        $checker = new VersionChecker($this->fixtureDir);
+        $this->assertSame('4.2.0', $checker->getApplicationVersion());
+    }
 }

@@ -53,27 +53,33 @@ class VersionAligner
     private function updateApplicationVersion(string $targetVersion, bool $dryRun): void
     {
         $composerJsonPath = $this->workingDirectory . DIRECTORY_SEPARATOR . 'composer.json';
+        $filesToCheck = [
+            'src/Console/Application.php',
+            'src/Application.php',
+            'src/Server.php',
+        ];
 
-        if (!file_exists($composerJsonPath)) {
-            throw new RuntimeException('composer.json not found.');
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode((string) file_get_contents($composerJsonPath), true);
+            if (is_array($composerData) && isset($composerData['bin']) && is_array($composerData['bin'])) {
+                foreach ($composerData['bin'] as $binFile) {
+                    array_unshift($filesToCheck, $binFile);
+                }
+            }
         }
 
-        $composerData = json_decode((string) file_get_contents($composerJsonPath), true);
+        foreach (array_unique($filesToCheck) as $fileToCheck) {
+            $filePath = $this->workingDirectory . DIRECTORY_SEPARATOR . $fileToCheck;
+            if (file_exists($filePath)) {
+                $content = (string) file_get_contents($filePath);
+                $pattern = '/([\'"])(v?\d+\.\d+\.\d+(?:-[a-zA-Z0-9\.]+)*)([\'"])/';
 
-        if (is_array($composerData) && isset($composerData['bin']) && is_array($composerData['bin'])) {
-            foreach ($composerData['bin'] as $binFile) {
-                $binPath = $this->workingDirectory . DIRECTORY_SEPARATOR . $binFile;
-                if (file_exists($binPath)) {
-                    $content = (string) file_get_contents($binPath);
-                    $pattern = '/([\'"])(v?\d+\.\d+\.\d+(?:-[a-zA-Z0-9\.]+)*)([\'"])/';
-
-                    if (preg_match($pattern, $content)) {
-                        $newContent = preg_replace($pattern, '${1}' . $targetVersion . '${3}', $content, 1);
-                        if ($newContent !== null && !$dryRun) {
-                            file_put_contents($binPath, $newContent);
-                        }
-                        return;
+                if (preg_match($pattern, $content)) {
+                    $newContent = preg_replace($pattern, '${1}' . $targetVersion . '${3}', $content, 1);
+                    if ($newContent !== null && !$dryRun) {
+                        file_put_contents($filePath, $newContent);
                     }
+                    return;
                 }
             }
         }
