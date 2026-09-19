@@ -6,6 +6,12 @@
 [![PDS Skeleton](https://img.shields.io/badge/pds-skeleton-blue.svg?style=flat)](https://github.com/php-pds/skeleton)
 [![Lean dist package](https://img.shields.io/badge/lean-dist%20package-00ffb6.svg?style=flat)](https://github.com/raphaelstolt/coding-standard-migrator)
 
+<p align="center">
+    <img src="logo.png"
+         title="the version aligner"
+         alt="version aligner logo">
+</p>
+
 A small development tool to keep application versions aligned with Git tags and changelog entries.
 
 The `version-aligner` works particularly well with standardized PHP package structures such as those defined by
