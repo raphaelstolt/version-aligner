@@ -1,5 +1,6 @@
 # version-aligner
 
+![Test Status](https://github.com/raphaelstolt/version-aligner/workflows/test/badge.svg)
 [![Version](http://img.shields.io/packagist/v/stolt/version-aligner.svg?style=flat)](https://packagist.org/packages/stolt/version-aligner)
 ![Downloads](https://img.shields.io/packagist/dt/stolt/version-aligner)
 ![PHP Version](https://img.shields.io/badge/php-8.2+-ff69b4.svg)
