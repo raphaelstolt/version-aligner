@@ -24,6 +24,6 @@ in the root directory of this repository.
 
 - Commits __MUST__ follow the [Conventional Commits](https://t.co/RF2z4M3jSo) conventions.
 
-- All upstreamed contributions __MUST__ use [feature / topic branches](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows) to ease merging.
+- All upstreamed contributions __MUST__ use [feature / topic branches](https://git-scm.com/book/en/v2/Git-Branching-Branching-Workflows) to ease merging or cherry-picking.
 
 - Please run `composer pre-commit-check` before opening a pull request.
