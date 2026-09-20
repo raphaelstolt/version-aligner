@@ -117,6 +117,20 @@ Evaluable outcomes of the `check` command are:
 version-aligner align [--dry-run]
 ```
 
+## Version discovery
+
+`version-aligner` automatically discovers the application version without requiring configuration.
+
+It checks the following PHP files for a version string (`1.2.3` or `v1.2.3`), in order:
+
+1. Executable files declared in `composer.json`'s `bin` section.
+2. `src/Console/Application.php`
+3. `src/Application.php`
+4. `src/Server.php`
+
+The first matching version string is used as the application's version. If no version is found, discovery returns
+`null`.
+
 ## License
 
 This library and its CLI are licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
