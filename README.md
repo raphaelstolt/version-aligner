@@ -139,6 +139,19 @@ This library and its CLI are licensed under the MIT license. Please see [LICENSE
 
 All noteworthy changes are documented in the [CHANGELOG.md](CHANGELOG.md).
 
+## Reporting issues
+
+Found a bug or an unexpected version alignment result? Please [open an issue](https://github.com/raphaelstolt/version-aligner/issues).
+
+If version discovery fails or detects an incorrect version, include:
+
+* The expected and detected application versions.
+* The relevant `composer.json` and PHP file structure.
+* The output of the command you ran.
+* Steps to reproduce the issue.
+
+Please remove any sensitive information before sharing files or command output.
+
 ## Contributing
 
 If you're considering contributing to this project, have a look at this repository's [CONTRIBUTING.md](.github/CONTRIBUTING.md)
