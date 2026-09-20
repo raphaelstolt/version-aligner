@@ -93,10 +93,10 @@ You can use it in pre-commit Git hooks, Composer scripts, or continuous integrat
 
 Example Composer script:
 ```json
-"scripts": {
-   "test": "phpunit",
-   ... // omitted scripts
-   "version-check": "version-aligner check"
+{
+  "scripts": {
+    "version-check": "version-aligner check"
+  }
 }
 ```
 
