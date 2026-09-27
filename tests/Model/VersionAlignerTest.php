@@ -80,7 +80,8 @@ class VersionAlignerTest extends TestCase
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0'));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $aligner->align();
+        $alignedFile = $aligner->align();
+        $this->assertSame('bin/app', $alignedFile);
 
         $updatedContent = (string) file_get_contents($this->fixtureDir . '/bin/app');
         $this->assertStringContainsString("'2.0.0'", $updatedContent);
@@ -102,10 +103,22 @@ class VersionAlignerTest extends TestCase
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0'));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $aligner->align(true);
+        $alignedFile = $aligner->align(true);
+        $this->assertSame('bin/app', $alignedFile);
 
         $updatedContent = (string) file_get_contents($this->fixtureDir . '/bin/app');
         $this->assertStringContainsString("'1.0.0'", $updatedContent); // Remained unchanged
+    }
+
+    public function testAlignReturnsNullWhenVersionsMatch(): void
+    {
+        $checker = $this->createMock(VersionChecker::class);
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v1.0.0', '1.0.0'));
+
+        $aligner = new VersionAligner($this->fixtureDir, $checker);
+        $alignedFile = $aligner->align();
+
+        $this->assertNull($alignedFile);
     }
 
     public function testAlignUpdatesVersionInSrcConsoleApplicationPhp(): void
@@ -131,7 +144,8 @@ class VersionAlignerTest extends TestCase
         $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0'));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $aligner->align();
+        $alignedFile = $aligner->align();
+        $this->assertSame('src/Console/Application.php', $alignedFile);
 
         $updatedContent = (string) file_get_contents($srcDir . '/Application.php');
         $this->assertStringContainsString("'4.3.0'", $updatedContent);

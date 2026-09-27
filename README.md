@@ -118,6 +118,12 @@ Evaluable outcomes of the `check` command are:
 version-aligner align [--dry-run]
 ```
 
+When using `--dry-run`, the command will simulate the alignment and indicate which file would be modified without actually changing it:
+
+```bash
+Versions would be aligned successfully in src/Console/Application.php (dry-run).
+```
+
 ## Version discovery
 
 `version-aligner` automatically discovers the application version without requiring configuration.

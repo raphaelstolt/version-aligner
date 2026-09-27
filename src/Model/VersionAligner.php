@@ -23,7 +23,7 @@ class VersionAligner
         $this->versionChecker->setWorkingDirectory($workingDirectory);
     }
 
-    public function align(bool $dryRun = false): void
+    public function align(bool $dryRun = false): ?string
     {
         $state = $this->versionChecker->check();
 
@@ -44,13 +44,13 @@ class VersionAligner
         $targetVersion = $changelog ?? $git;
 
         if ($app === $targetVersion) {
-            return;
+            return null;
         }
 
-        $this->updateApplicationVersion($targetVersion, $dryRun);
+        return $this->updateApplicationVersion($targetVersion, $dryRun);
     }
 
-    private function updateApplicationVersion(string $targetVersion, bool $dryRun): void
+    private function updateApplicationVersion(string $targetVersion, bool $dryRun): string
     {
         $composerJsonPath = $this->workingDirectory . DIRECTORY_SEPARATOR . 'composer.json';
         $filesToCheck = [
@@ -79,7 +79,7 @@ class VersionAligner
                     if ($newContent !== null && !$dryRun) {
                         file_put_contents($filePath, $newContent);
                     }
-                    return;
+                    return $fileToCheck;
                 }
             }
         }

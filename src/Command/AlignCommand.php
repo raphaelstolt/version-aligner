@@ -48,9 +48,14 @@ class AlignCommand extends Command
         $dryRun = (bool) $input->getOption('dry-run');
 
         try {
-            $this->versionAligner->align($dryRun);
-            if ($dryRun) {
+            $alignedFile = $this->versionAligner->align($dryRun);
+
+            if ($dryRun && $alignedFile !== null) {
+                $output->writeln(sprintf('Versions would be aligned successfully in %s (dry-run).', $alignedFile));
+            } elseif ($dryRun) {
                 $output->writeln('Versions would be aligned successfully (dry-run).');
+            } elseif ($alignedFile !== null) {
+                $output->writeln(sprintf('Versions aligned successfully in %s.', $alignedFile));
             } else {
                 $output->writeln('Versions aligned successfully.');
             }

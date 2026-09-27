@@ -15,23 +15,34 @@ class AlignCommandTest extends TestCase
     public function testExecuteSuccess(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(false);
+        $aligner->expects($this->once())->method('align')->with(false)->willReturn('src/Application.php');
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('Versions aligned successfully.');
+            ->assertOutputContains('Versions aligned successfully in src/Application.php.');
     }
 
     public function testExecuteDryRun(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(true);
+        $aligner->expects($this->once())->method('align')->with(true)->willReturn('src/Application.php');
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute('--dry-run')
             ->assertSuccessful()
-            ->assertOutputContains('Versions would be aligned successfully (dry-run).');
+            ->assertOutputContains('Versions would be aligned successfully in src/Application.php (dry-run).');
+    }
+
+    public function testExecuteSuccessNoModifications(): void
+    {
+        $aligner = $this->createMock(VersionAligner::class);
+        $aligner->expects($this->once())->method('align')->with(false)->willReturn(null);
+
+        TestCommand::for(new AlignCommand($aligner))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('Versions aligned successfully.');
     }
 
     public function testExecuteFailure(): void
