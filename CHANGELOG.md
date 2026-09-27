@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.1.0] - 2026-09-27
+
 ### Enhanced
 - Improved `--dry-run` output of the `align` command.
 
@@ -30,7 +32,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Initial implementation.
 
-[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.3...v1.1.0
 [v1.0.3]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.0...v1.0.1
