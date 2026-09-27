@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'align', description: 'Aligns the application version when it differs from the release version.')]
+#[AsCommand(name: 'align', description: 'Aligns the application version when it differs from the release version')]
 class AlignCommand extends Command
 {
     private VersionAligner $versionAligner;

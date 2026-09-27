@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'check', description: 'Checks if application versions are aligned.')]
+#[AsCommand(name: 'check', description: 'Checks if application versions are aligned')]
 class CheckCommand extends Command
 {
     private VersionChecker $versionChecker;
