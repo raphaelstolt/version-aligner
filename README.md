@@ -138,6 +138,14 @@ It checks the following PHP files for a version string (`1.2.3` or `v1.2.3`), in
 The first matching version string is used as the application's version. If no version is found, discovery returns
 `null`.
 
+## AI Skill
+
+`version-aligner` includes an AI skill that helps AI agents check, diagnose, and safely align application versions
+with Git tags and `CHANGELOG.md`.
+
+The skill is available at `.ai/skills/version-aligner/SKILL.md` and provides guidance for using `check`, `align`,
+and `align --dry-run` as part of a release workflow.
+
 ## License
 
 This library and its CLI are licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
