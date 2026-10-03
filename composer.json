@@ -1,20 +1,17 @@
 {
     "name": "stolt/version-aligner",
     "description": "A small development tool to keep application versions aligned with Git tags and changelog entries.",
-    "keywords": [
-        "git",
-        "tag",
-        "changelog",
-        "version",
-        "alignment",
-        "sync",
-        "dev"
-    ],
+    "keywords": ["git", "tag", "changelog", "version", "alignment", "sync", "dev"],
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Stolt\\VersionAligner\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stolt\\VersionAligner\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -28,7 +25,7 @@
         "symfony/console": "^7.4 || ^8.1"
     },
     "bin": [
-        "bin/version-aligner"
+       "bin/version-aligner"
     ],
     "config": {
         "preferred-install": "dist",
@@ -37,5 +34,25 @@
         "allow-plugins": {
             "carthage-software/mago": true
         }
+    },
+    "require-dev": {
+        "carthage-software/mago": "^1.49",
+        "phpunit/phpunit": "^11.0 || ^12.0 || ^13.3",
+        "stolt/composer-peel": "^4.1",
+        "zenstruck/console-test": "^1.8"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs-lint": [
+            "mago format --check",
+            "mago lint"
+        ],
+        "cs-fix": "mago format",
+        "version-check": "bin/version-aligner check",
+        "pre-commit-check": [
+            "@cs-lint",
+            "@version-check",
+            "@test"
+        ]
     }
 }
