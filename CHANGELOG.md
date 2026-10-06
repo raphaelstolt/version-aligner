@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.3.0] - 2026-10-06
+
 ### Enhanced
 - The `align` command now updates the version in all application files where it is found, instead of only the
 first match.
@@ -47,7 +49,8 @@ version file separately.
 ### Added
 - Initial implementation.
 
-[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.3.0...HEAD
+[v1.3.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.1...v1.2.0
 [v1.1.1]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.3...v1.1.0
