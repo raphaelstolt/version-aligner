@@ -141,7 +141,9 @@ class VersionAlignerTest extends TestCase
         file_put_contents($srcDir . '/Application.php', $content);
 
         $checker = $this->createStub(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0', ['src/Console/Application.php' => '4.2.0']));
+        $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0', [
+            'src/Console/Application.php' => '4.2.0',
+        ]));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
         $alignedFiles = $aligner->align();
@@ -180,15 +182,10 @@ class VersionAlignerTest extends TestCase
         file_put_contents($srcDir . '/Application.php', $appContent);
 
         $checker = $this->createStub(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState(
-            '1.0.0',
-            'v2.0.0',
-            '2.0.0',
-            [
-                'bin/app' => '1.0.0',
-                'src/Console/Application.php' => '1.0.0',
-            ]
-        ));
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', [
+            'bin/app' => '1.0.0',
+            'src/Console/Application.php' => '1.0.0',
+        ]));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
         $alignedFiles = $aligner->align();
@@ -210,15 +207,10 @@ class VersionAlignerTest extends TestCase
     public function testAlignReturnsNullWhenAllVersionsMatch(): void
     {
         $checker = $this->createStub(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState(
-            '1.0.0',
-            'v1.0.0',
-            '1.0.0',
-            [
-                'bin/app' => '1.0.0',
-                'src/Console/Application.php' => '1.0.0',
-            ]
-        ));
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v1.0.0', '1.0.0', [
+            'bin/app' => '1.0.0',
+            'src/Console/Application.php' => '1.0.0',
+        ]));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
         $this->assertNull($aligner->align());
@@ -252,15 +244,10 @@ class VersionAlignerTest extends TestCase
         file_put_contents($srcDir . '/Application.php', $appContent);
 
         $checker = $this->createStub(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState(
-            '1.0.0',
-            'v2.0.0',
-            '2.0.0',
-            [
-                'bin/app' => '1.0.0',
-                'src/Console/Application.php' => '2.0.0',
-            ]
-        ));
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', [
+            'bin/app' => '1.0.0',
+            'src/Console/Application.php' => '2.0.0',
+        ]));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
         $alignedFiles = $aligner->align();

@@ -62,10 +62,14 @@ class AlignCommandTest extends TestCase
     public function testExecuteMultipleFilesAligned(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(false)->willReturn([
-            'bin/app',
-            'src/Console/Application.php',
-        ]);
+        $aligner
+            ->expects($this->once())
+            ->method('align')
+            ->with(false)
+            ->willReturn([
+                'bin/app',
+                'src/Console/Application.php',
+            ]);
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute()
@@ -76,14 +80,20 @@ class AlignCommandTest extends TestCase
     public function testExecuteMultipleFilesDryRun(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(true)->willReturn([
-            'bin/app',
-            'src/Console/Application.php',
-        ]);
+        $aligner
+            ->expects($this->once())
+            ->method('align')
+            ->with(true)
+            ->willReturn([
+                'bin/app',
+                'src/Console/Application.php',
+            ]);
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute('--dry-run')
             ->assertSuccessful()
-            ->assertOutputContains('Versions would be aligned successfully in bin/app, src/Console/Application.php (dry-run).');
+            ->assertOutputContains(
+                'Versions would be aligned successfully in bin/app, src/Console/Application.php (dry-run).',
+            );
     }
 }
