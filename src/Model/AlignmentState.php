@@ -10,6 +10,7 @@ final class AlignmentState
         public readonly ?string $applicationVersion,
         public readonly ?string $gitTag,
         public readonly ?string $changelogVersion,
+        public readonly array $applicationVersions = [],
     ) {}
 
     public function isAligned(): bool
@@ -23,6 +24,13 @@ final class AlignmentState
         $app = $normalize($this->applicationVersion);
         $git = $normalize($this->gitTag);
         $changelog = $normalize($this->changelogVersion);
+
+        // Check that all application versions match the release version
+        foreach ($this->applicationVersions as $version) {
+            if ($normalize($version) !== $git) {
+                return false;
+            }
+        }
 
         return $app === $git && $git === $changelog;
     }

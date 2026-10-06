@@ -26,4 +26,32 @@ class AlignmentStateTest extends TestCase
         $state = new AlignmentState('1.0.0', null, '1.0.0');
         $this->assertFalse($state->isAligned());
     }
+
+    public function testIsAlignedReturnsTrueWhenMultipleAppVersionsMatch(): void
+    {
+        $state = new AlignmentState(
+            '1.0.0',
+            'v1.0.0',
+            '1.0.0',
+            [
+                'bin/app' => '1.0.0',
+                'src/Console/Application.php' => '1.0.0',
+            ],
+        );
+        $this->assertTrue($state->isAligned());
+    }
+
+    public function testIsAlignedReturnsFalseWhenOneAppVersionMismatches(): void
+    {
+        $state = new AlignmentState(
+            '0.9.0',
+            'v1.0.0',
+            '1.0.0',
+            [
+                'bin/app' => '0.9.0',
+                'src/Console/Application.php' => '1.0.0',
+            ],
+        );
+        $this->assertFalse($state->isAligned());
+    }
 }

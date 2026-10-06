@@ -42,13 +42,22 @@ class CheckCommand extends Command
         $state = $this->versionChecker->check();
 
         if ($input->getOption('format') === 'json') {
+            $appVersions = $state->applicationVersions;
+            $versionsPayload = [
+                'gitTag' => $state->gitTag,
+                'changelog' => $state->changelogVersion,
+            ];
+
+            if (empty($appVersions)) {
+                $versionsPayload['application'] = $state->applicationVersion;
+            } else {
+                $versionsPayload['application'] = $state->applicationVersion;
+                $versionsPayload['applicationVersions'] = $appVersions;
+            }
+
             $output->writeln((string) json_encode([
                 'isAligned' => $state->isAligned(),
-                'versions' => [
-                    'gitTag' => $state->gitTag,
-                    'changelog' => $state->changelogVersion,
-                    'application' => $state->applicationVersion,
-                ],
+                'versions' => $versionsPayload,
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
             return $state->isAligned() ? Command::SUCCESS : Command::FAILURE;
@@ -62,8 +71,18 @@ class CheckCommand extends Command
         $versions = [
             'Git tag' => $state->gitTag,
             'CHANGELOG.md' => $state->changelogVersion,
-            'Application' => $state->applicationVersion,
         ];
+
+        // Add application version(s) — if multiple locations, show each separately
+        $appVersions = $state->applicationVersions;
+        if (empty($appVersions)) {
+            $versions['Application'] = $state->applicationVersion;
+        } else {
+            foreach ($appVersions as $file => $version) {
+                $label = count($appVersions) > 1 ? sprintf('Application (%s)', $file) : 'Application';
+                $versions[$label] = $version;
+            }
+        }
 
         $normalized = array_map($normalize, $versions);
         $filtered = array_filter($normalized, fn($v) => $v !== null);
@@ -83,7 +102,7 @@ class CheckCommand extends Command
             }
 
             $displayValue = $v ?? 'missing';
-            $output->writeln(sprintf('%s %-16s %s', $icon, $label, $displayValue));
+            $output->writeln(sprintf('%s %-24s %s', $icon, $label, $displayValue));
         }
 
         $output->writeln('');

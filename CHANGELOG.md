@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Enhanced
+- The `check` command now reports versions from all locations where they are found, displaying each application
+version file separately.
+
 ## [v1.1.1] - 2026-10-03
 
 ### Fixed

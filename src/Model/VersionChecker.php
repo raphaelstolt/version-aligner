@@ -20,10 +20,14 @@ class VersionChecker
 
     public function check(): AlignmentState
     {
+        $applicationVersions = $this->getApplicationVersions();
+        $applicationVersion = empty($applicationVersions) ? null : reset($applicationVersions);
+
         return new AlignmentState(
-            $this->getApplicationVersion(),
+            $applicationVersion,
             $this->getLatestGitTag(),
             $this->getChangelogVersion(),
+            $applicationVersions,
         );
     }
 
@@ -80,7 +84,10 @@ class VersionChecker
         return null;
     }
 
-    public function getApplicationVersion(): ?string
+    /**
+     * Returns all application versions found, keyed by file path.
+     */
+    public function getApplicationVersions(): array
     {
         $composerJsonPath = $this->workingDirectory . DIRECTORY_SEPARATOR . 'composer.json';
         $filesToCheck = [
@@ -98,16 +105,26 @@ class VersionChecker
             }
         }
 
+        $versions = [];
         foreach (array_unique($filesToCheck) as $fileToCheck) {
             $filePath = $this->workingDirectory . DIRECTORY_SEPARATOR . $fileToCheck;
             if (file_exists($filePath)) {
                 $content = (string) file_get_contents($filePath);
                 if (preg_match('/[\'"](v?\d+\.\d+\.\d+(?:-[a-zA-Z0-9\.]+)*)[\'"]/', $content, $matches)) {
-                    return $matches[1];
+                    $versions[$fileToCheck] = $matches[1];
                 }
             }
         }
 
-        return null;
+        return $versions;
+    }
+
+    public function getApplicationVersion(): ?string
+    {
+        $versions = $this->getApplicationVersions();
+        if (empty($versions)) {
+            return null;
+        }
+        return reset($versions);
     }
 }

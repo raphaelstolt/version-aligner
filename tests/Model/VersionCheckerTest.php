@@ -143,4 +143,49 @@ class VersionCheckerTest extends TestCase
         $checker = new VersionChecker($this->fixtureDir);
         $this->assertSame('4.2.0', $checker->getApplicationVersion());
     }
+
+    public function testGetApplicationVersionsReturnsMultipleLocations(): void
+    {
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode(['bin' => ['bin/app']]));
+        mkdir($this->fixtureDir . '/bin');
+
+        $binContent = <<<EOF
+            #!/usr/bin/env php
+            <?php
+            \$app = new Application('my-app', '2.0.1');
+            EOF;
+        file_put_contents($this->fixtureDir . '/bin/app', $binContent);
+
+        $srcDir = $this->fixtureDir . '/src/Console';
+        mkdir($srcDir, 0777, true);
+
+        $appContent = <<<EOF
+            <?php
+            class Application extends \Symfony\Component\Console\Application
+            {
+                public function __construct()
+                {
+                    parent::__construct('My App', '2.0.1');
+                }
+            }
+            EOF;
+        file_put_contents($srcDir . '/Application.php', $appContent);
+
+        $checker = new VersionChecker($this->fixtureDir);
+        $versions = $checker->getApplicationVersions();
+
+        $this->assertCount(2, $versions);
+        $this->assertSame('2.0.1', $versions['bin/app']);
+        $this->assertSame('2.0.1', $versions['src/Console/Application.php']);
+    }
+
+    public function testGetApplicationVersionsReturnsEmptyWhenNoVersionFound(): void
+    {
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode([]));
+
+        $checker = new VersionChecker($this->fixtureDir);
+        $versions = $checker->getApplicationVersions();
+
+        $this->assertEmpty($versions);
+    }
 }
