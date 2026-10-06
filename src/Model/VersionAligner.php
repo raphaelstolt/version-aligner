@@ -23,7 +23,7 @@ class VersionAligner
         $this->versionChecker->setWorkingDirectory($workingDirectory);
     }
 
-    public function align(bool $dryRun = false): ?string
+    public function align(bool $dryRun = false): ?array
     {
         $state = $this->versionChecker->check();
 
@@ -43,14 +43,26 @@ class VersionAligner
 
         $targetVersion = $changelog ?? $git;
 
-        if ($app === $targetVersion) {
+        // Check if all application versions already match the target
+        $allMatch = true;
+        foreach ($state->applicationVersions as $version) {
+            if ($normalize($version) !== $targetVersion) {
+                $allMatch = false;
+                break;
+            }
+        }
+        if ($allMatch) {
             return null;
         }
 
-        return $this->updateApplicationVersion($targetVersion, $dryRun);
+        return $this->updateApplicationVersions($targetVersion, $dryRun);
     }
 
-    private function updateApplicationVersion(string $targetVersion, bool $dryRun): string
+    /**
+     * Updates the application version in all files that contain a version string.
+     * Returns an array of file paths that were updated.
+     */
+    private function updateApplicationVersions(string $targetVersion, bool $dryRun): array
     {
         $composerJsonPath = $this->workingDirectory . DIRECTORY_SEPARATOR . 'composer.json';
         $filesToCheck = [
@@ -68,6 +80,7 @@ class VersionAligner
             }
         }
 
+        $alignedFiles = [];
         foreach (array_unique($filesToCheck) as $fileToCheck) {
             $filePath = $this->workingDirectory . DIRECTORY_SEPARATOR . $fileToCheck;
             if (file_exists($filePath)) {
@@ -79,11 +92,15 @@ class VersionAligner
                     if ($newContent !== null && !$dryRun) {
                         file_put_contents($filePath, $newContent);
                     }
-                    return $fileToCheck;
+                    $alignedFiles[] = $fileToCheck;
                 }
             }
         }
 
-        throw new RuntimeException('Could not find the application version string to replace.');
+        if (empty($alignedFiles)) {
+            throw new RuntimeException('Could not find the application version string to replace.');
+        }
+
+        return $alignedFiles;
     }
 }

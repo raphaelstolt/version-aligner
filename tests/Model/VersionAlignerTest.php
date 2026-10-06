@@ -77,11 +77,11 @@ class VersionAlignerTest extends TestCase
 
         $checker = $this->createMock(VersionChecker::class);
         // Current state: app is 1.0.0, release is 2.0.0
-        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0'));
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', ['bin/app' => '1.0.0']));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $alignedFile = $aligner->align();
-        $this->assertSame('bin/app', $alignedFile);
+        $alignedFiles = $aligner->align();
+        $this->assertSame(['bin/app'], $alignedFiles);
 
         $updatedContent = (string) file_get_contents($this->fixtureDir . '/bin/app');
         $this->assertStringContainsString("'2.0.0'", $updatedContent);
@@ -100,11 +100,11 @@ class VersionAlignerTest extends TestCase
         file_put_contents($this->fixtureDir . '/bin/app', $binContent);
 
         $checker = $this->createMock(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0'));
+        $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', ['bin/app' => '1.0.0']));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $alignedFile = $aligner->align(true);
-        $this->assertSame('bin/app', $alignedFile);
+        $alignedFiles = $aligner->align(true);
+        $this->assertSame(['bin/app'], $alignedFiles);
 
         $updatedContent = (string) file_get_contents($this->fixtureDir . '/bin/app');
         $this->assertStringContainsString("'1.0.0'", $updatedContent); // Remained unchanged
@@ -141,14 +141,138 @@ class VersionAlignerTest extends TestCase
         file_put_contents($srcDir . '/Application.php', $content);
 
         $checker = $this->createMock(VersionChecker::class);
-        $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0'));
+        $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0', ['src/Console/Application.php' => '4.2.0']));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
-        $alignedFile = $aligner->align();
-        $this->assertSame('src/Console/Application.php', $alignedFile);
+        $alignedFiles = $aligner->align();
+        $this->assertSame(['src/Console/Application.php'], $alignedFiles);
 
         $updatedContent = (string) file_get_contents($srcDir . '/Application.php');
         $this->assertStringContainsString("'4.3.0'", $updatedContent);
         $this->assertStringNotContainsString("'4.2.0'", $updatedContent);
+    }
+
+    public function testAlignUpdatesMultipleVersionLocations(): void
+    {
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode(['bin' => ['bin/app']]));
+        mkdir($this->fixtureDir . '/bin');
+
+        $binContent = <<<EOF
+            #!/usr/bin/env php
+            <?php
+            \$app = new Application('my-app', '1.0.0');
+            EOF;
+        file_put_contents($this->fixtureDir . '/bin/app', $binContent);
+
+        $srcDir = $this->fixtureDir . '/src/Console';
+        mkdir($srcDir, 0777, true);
+
+        $appContent = <<<EOF
+            <?php
+            class Application extends \Symfony\Component\Console\Application
+            {
+                public function __construct()
+                {
+                    parent::__construct('My App', '1.0.0');
+                }
+            }
+            EOF;
+        file_put_contents($srcDir . '/Application.php', $appContent);
+
+        $checker = $this->createMock(VersionChecker::class);
+        $checker->method('check')->willReturn(new AlignmentState(
+            '1.0.0',
+            'v2.0.0',
+            '2.0.0',
+            [
+                'bin/app' => '1.0.0',
+                'src/Console/Application.php' => '1.0.0',
+            ]
+        ));
+
+        $aligner = new VersionAligner($this->fixtureDir, $checker);
+        $alignedFiles = $aligner->align();
+
+        $this->assertCount(2, $alignedFiles);
+        $this->assertContains('bin/app', $alignedFiles);
+        $this->assertContains('src/Console/Application.php', $alignedFiles);
+
+        // Verify both files were updated
+        $updatedBin = (string) file_get_contents($this->fixtureDir . '/bin/app');
+        $this->assertStringContainsString("'2.0.0'", $updatedBin);
+        $this->assertStringNotContainsString("'1.0.0'", $updatedBin);
+
+        $updatedApp = (string) file_get_contents($srcDir . '/Application.php');
+        $this->assertStringContainsString("'2.0.0'", $updatedApp);
+        $this->assertStringNotContainsString("'1.0.0'", $updatedApp);
+    }
+
+    public function testAlignReturnsNullWhenAllVersionsMatch(): void
+    {
+        $checker = $this->createMock(VersionChecker::class);
+        $checker->method('check')->willReturn(new AlignmentState(
+            '1.0.0',
+            'v1.0.0',
+            '1.0.0',
+            [
+                'bin/app' => '1.0.0',
+                'src/Console/Application.php' => '1.0.0',
+            ]
+        ));
+
+        $aligner = new VersionAligner($this->fixtureDir, $checker);
+        $this->assertNull($aligner->align());
+    }
+
+    public function testAlignUpdatesEvenWhenSomeVersionsMatch(): void
+    {
+        file_put_contents($this->fixtureDir . '/composer.json', json_encode(['bin' => ['bin/app']]));
+        mkdir($this->fixtureDir . '/bin');
+
+        $binContent = <<<EOF
+            #!/usr/bin/env php
+            <?php
+            \$app = new Application('my-app', '1.0.0');
+            EOF;
+        file_put_contents($this->fixtureDir . '/bin/app', $binContent);
+
+        $srcDir = $this->fixtureDir . '/src/Console';
+        mkdir($srcDir, 0777, true);
+
+        $appContent = <<<EOF
+            <?php
+            class Application extends \Symfony\Component\Console\Application
+            {
+                public function __construct()
+                {
+                    parent::__construct('My App', '2.0.0');
+                }
+            }
+            EOF;
+        file_put_contents($srcDir . '/Application.php', $appContent);
+
+        $checker = $this->createMock(VersionChecker::class);
+        $checker->method('check')->willReturn(new AlignmentState(
+            '1.0.0',
+            'v2.0.0',
+            '2.0.0',
+            [
+                'bin/app' => '1.0.0',
+                'src/Console/Application.php' => '2.0.0',
+            ]
+        ));
+
+        $aligner = new VersionAligner($this->fixtureDir, $checker);
+        $alignedFiles = $aligner->align();
+
+        $this->assertCount(2, $alignedFiles);
+
+        // bin/app was 1.0.0, should be updated to 2.0.0
+        $updatedBin = (string) file_get_contents($this->fixtureDir . '/bin/app');
+        $this->assertStringContainsString("'2.0.0'", $updatedBin);
+
+        // src/Console/Application.php was already 2.0.0, should remain 2.0.0
+        $updatedApp = (string) file_get_contents($srcDir . '/Application.php');
+        $this->assertStringContainsString("'2.0.0'", $updatedApp);
     }
 }

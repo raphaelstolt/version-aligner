@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Enhanced
+- The `align` command now updates the version in all application files where it is found, instead of only the
+first match.
+
 ## [v1.2.0] - 2026-10-06
 
 ### Enhanced

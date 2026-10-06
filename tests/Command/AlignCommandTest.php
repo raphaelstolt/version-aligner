@@ -15,7 +15,7 @@ class AlignCommandTest extends TestCase
     public function testExecuteSuccess(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(false)->willReturn('src/Application.php');
+        $aligner->expects($this->once())->method('align')->with(false)->willReturn(['src/Application.php']);
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute()
@@ -26,7 +26,7 @@ class AlignCommandTest extends TestCase
     public function testExecuteDryRun(): void
     {
         $aligner = $this->createMock(VersionAligner::class);
-        $aligner->expects($this->once())->method('align')->with(true)->willReturn('src/Application.php');
+        $aligner->expects($this->once())->method('align')->with(true)->willReturn(['src/Application.php']);
 
         TestCommand::for(new AlignCommand($aligner))
             ->execute('--dry-run')
@@ -57,5 +57,33 @@ class AlignCommandTest extends TestCase
             ->execute()
             ->assertStatusCode(1)
             ->assertOutputContains('Git tag and Changelog version do not match.');
+    }
+
+    public function testExecuteMultipleFilesAligned(): void
+    {
+        $aligner = $this->createMock(VersionAligner::class);
+        $aligner->expects($this->once())->method('align')->with(false)->willReturn([
+            'bin/app',
+            'src/Console/Application.php',
+        ]);
+
+        TestCommand::for(new AlignCommand($aligner))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('Versions aligned successfully in bin/app, src/Console/Application.php.');
+    }
+
+    public function testExecuteMultipleFilesDryRun(): void
+    {
+        $aligner = $this->createMock(VersionAligner::class);
+        $aligner->expects($this->once())->method('align')->with(true)->willReturn([
+            'bin/app',
+            'src/Console/Application.php',
+        ]);
+
+        TestCommand::for(new AlignCommand($aligner))
+            ->execute('--dry-run')
+            ->assertSuccessful()
+            ->assertOutputContains('Versions would be aligned successfully in bin/app, src/Console/Application.php (dry-run).');
     }
 }
