@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [v1.2.0] - 2026-10-06
+
 ### Enhanced
 - The `check` command now reports versions from all locations where they are found, displaying each application
 version file separately.
@@ -41,7 +43,8 @@ version file separately.
 ### Added
 - Initial implementation.
 
-[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/raphaelstolt/version-aligner/compare/v1.2.0...HEAD
+[v1.2.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.1...v1.2.0
 [v1.1.1]: https://github.com/raphaelstolt/version-aligner/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.3...v1.1.0
 [v1.0.3]: https://github.com/raphaelstolt/version-aligner/compare/v1.0.2...v1.0.3
