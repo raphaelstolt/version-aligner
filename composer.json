@@ -1,7 +1,15 @@
 {
     "name": "stolt/version-aligner",
     "description": "A small development tool to keep application versions aligned with Git tags and changelog entries.",
-    "keywords": ["git", "tag", "changelog", "version", "alignment", "sync", "dev"],
+    "keywords": [
+        "git",
+        "tag",
+        "changelog",
+        "version",
+        "alignment",
+        "sync",
+        "dev"
+    ],
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -25,7 +33,7 @@
         "symfony/console": "^7.4 || ^8.1"
     },
     "bin": [
-       "bin/version-aligner"
+        "bin/version-aligner"
     ],
     "config": {
         "preferred-install": "dist",
