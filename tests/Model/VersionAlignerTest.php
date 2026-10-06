@@ -42,7 +42,7 @@ class VersionAlignerTest extends TestCase
 
     public function testAlignThrowsExceptionWhenNoReleaseVersionFound(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', null, null));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
@@ -54,7 +54,7 @@ class VersionAlignerTest extends TestCase
 
     public function testAlignThrowsExceptionWhenGitAndChangelogMismatch(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v1.1.0', '1.2.0'));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
@@ -75,7 +75,7 @@ class VersionAlignerTest extends TestCase
             EOF;
         file_put_contents($this->fixtureDir . '/bin/app', $binContent);
 
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         // Current state: app is 1.0.0, release is 2.0.0
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', ['bin/app' => '1.0.0']));
 
@@ -99,7 +99,7 @@ class VersionAlignerTest extends TestCase
             EOF;
         file_put_contents($this->fixtureDir . '/bin/app', $binContent);
 
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v2.0.0', '2.0.0', ['bin/app' => '1.0.0']));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
@@ -112,7 +112,7 @@ class VersionAlignerTest extends TestCase
 
     public function testAlignReturnsNullWhenVersionsMatch(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v1.0.0', '1.0.0'));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
@@ -140,7 +140,7 @@ class VersionAlignerTest extends TestCase
             EOF;
         file_put_contents($srcDir . '/Application.php', $content);
 
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('4.2.0', 'v4.3.0', '4.3.0', ['src/Console/Application.php' => '4.2.0']));
 
         $aligner = new VersionAligner($this->fixtureDir, $checker);
@@ -179,7 +179,7 @@ class VersionAlignerTest extends TestCase
             EOF;
         file_put_contents($srcDir . '/Application.php', $appContent);
 
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState(
             '1.0.0',
             'v2.0.0',
@@ -209,7 +209,7 @@ class VersionAlignerTest extends TestCase
 
     public function testAlignReturnsNullWhenAllVersionsMatch(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState(
             '1.0.0',
             'v1.0.0',
@@ -251,7 +251,7 @@ class VersionAlignerTest extends TestCase
             EOF;
         file_put_contents($srcDir . '/Application.php', $appContent);
 
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState(
             '1.0.0',
             'v2.0.0',

@@ -14,7 +14,7 @@ class CheckCommandTest extends TestCase
 {
     public function testExecuteSuccessfulAlignment(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('1.0.0', 'v1.0.0', '1.0.0', ['src/Console/Application.php' => '1.0.0']));
 
         TestCommand::for(new CheckCommand($checker))
@@ -30,7 +30,7 @@ class CheckCommandTest extends TestCase
 
     public function testExecuteMismatch(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('0.9.0', 'v1.0.0', '1.0.0', ['src/Console/Application.php' => '0.9.0']));
 
         TestCommand::for(new CheckCommand($checker))
@@ -47,7 +47,7 @@ class CheckCommandTest extends TestCase
 
     public function testExecuteJsonFormat(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState('0.9.0', 'v1.0.0', '1.0.0', ['src/Console/Application.php' => '0.9.0']));
 
         TestCommand::for(new CheckCommand($checker))
@@ -61,7 +61,7 @@ class CheckCommandTest extends TestCase
 
     public function testExecuteMultipleApplicationVersions(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState(
             '1.0.0',
             'v1.0.0',
@@ -82,7 +82,7 @@ class CheckCommandTest extends TestCase
 
     public function testExecuteMultipleApplicationVersionsMismatch(): void
     {
-        $checker = $this->createMock(VersionChecker::class);
+        $checker = $this->createStub(VersionChecker::class);
         $checker->method('check')->willReturn(new AlignmentState(
             '0.9.0',
             'v1.0.0',
